@@ -1,0 +1,25 @@
+Cartographancer (dall'unione di Cartography e il suffisso -mancer) è un'applicazione web dedicata alla creazione, gestione e condivisione di battlemap per giochi di ruolo da tavolo. L'obiettivo è fornire un ambiente di lavoro centralizzato, accessibile direttamente dal browser, che permetta ai Game Master di progettare i propri scenari di gioco senza la necessità di software dedicati o di trasferire file manualmente tra diversi dispositivi.
+
+Cartographancer utilizza un'architettura client-server; il sito permette di mantenere sincronizzati il proprio lavoro e le risorse grafiche attraverso l'account personale, garantendo la portabilità del progetto su diversi PC.
+Features Principali
+
+    Editor Multilivello: un editor grafico che permette agli utenti di posizionare asset tramite interfaccia drag and drop (caricati dal proprio repository) e strumenti in stile 
+    "Paint" per disegnare direttamente sulla mappa (pennelli, colori, gomma). L'editor opera su diversi livelli (layer) per non interferire con gli oggetti posizionati.
+
+    Gestione Repository e Asset: ogni utente dispone di un'area privata dove caricare i propri file grafici. Questi vengono salvati sul server, permettendo all'utente di ritrovare i 
+    propri strumenti personali ad ogni accesso.
+
+    Galleria Community e Clonazione: il sito integra una galleria pubblica dove gli utenti possono pubblicare le proprie mappe. I visitatori possono esportare i lavori altrui come 
+    immagini (PNG/JPEG) o "clonarli" nel proprio account per modificarli e/o riutilizzarli.
+
+Architettura e Tecnologie ipotizzate
+
+A seguito di un'analisi preliminare delle specifiche e degli argomenti trattati durante il corso, si prevede di sviluppare l'applicativo come una Single Page Application (SPA) interfacciata con un backend RESTful. Gli strumenti individuati come idonei sono:
+
+    Frontend: sviluppato in Angular con l'utilizzo di TypeScript per garantire una gestione robusta delle strutture dati. Per la parte grafica e l'interazione dell'editor (disegno e 
+    posizionamento), verranno utilizzate le API HTML5 Canvas e la manipolazione avanzata del DOM. L'interfaccia sarà resa responsive tramite Bootstrap.
+
+    Backend: implementato con Node.js ed Express, per gestire in modo asincrono le richieste API e il flusso di dati tra client e database.
+
+    Persistenza Dati: utilizzo di un database per l'archiviazione di account, mappe (salvate in formato JSON per mantenere la modificabilità dei singoli elementi) e asset grafici 
+    (gestiti come file binari).
