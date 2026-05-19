@@ -1,0 +1,76 @@
+================================================================================
+ MANUALÈ TECNICO: CARTOGRAPHANCER (WEB & RESPONSIVE)
+================================================================================
+
+FASE 1: SETUP DEL PROGETTO (FRONTEND & BACKEND)
+--------------------------------------------------------------------------------
+Creeremo due cartelle separate per mantenere l'architettura Three-Tier (Slide 39 Web).
+
+1. Cartella principale del progetto:
+   > mkdir cartographancer-project
+   > cd cartographancer-project
+
+2. Inizializza il Frontend (Angular):
+   > ng new frontend --routing --style=scss
+   (Scegli "No" per SSR se vuoi semplificare come da Slide 32 Angular).
+   > cd frontend
+   > npm install bootstrap bootstrap-icons (Slide 31 Bootstrap)
+   > cd ..
+
+3. Inizializza il Backend (Node.js):
+   > mkdir backend
+   > cd backend
+   > npm init -y
+   > npm install express mongoose cors multer jsonwebtoken bcrypt dotenv
+   > cd ..
+
+FASE 2: IL DATABASE (MONGODB)
+--------------------------------------------------------------------------------
+1. Apri MongoDB Compass e connettiti a 'mongodb://localhost:27017'.
+2. Crea un database chiamato 'cartographancer'.
+3. Crea le collezioni: 'users', 'maps', 'assets'.
+
+FASE 3: SVILUPPO BACKEND (REST API)
+--------------------------------------------------------------------------------
+Seguendo le slide "Programmazione Asincrona" e "HTTP":
+
+1. Crea 'server.js': Configura Express, CORS e la connessione a MongoDB.
+2. Definisci i Modelli (Mongoose): 
+   - User (email, password hash).
+   - Map (il JSON 'content' visto prima).
+3. Crea le rotte:
+   - /api/auth (login/register).
+   - /api/maps (save/load/gallery).
+   - /api/assets (upload di immagini tramite Multer).
+4. Usa i codici di stato (Slide 30 HTTP): 201 per creato, 401 per non autorizzato, etc.
+
+FASE 4: FRONTEND E BOOTSTRAP (RESPONSIVE UI)
+--------------------------------------------------------------------------------
+1. Configura Bootstrap: In 'angular.json', aggiungi i path di bootstrap.min.css 
+   (Slide 31 Angular/Bootstrap).
+2. Layout (app.component.html):
+   - Usa una <nav> di Bootstrap (Slide 16 Bootstrap).
+   - Usa <router-outlet> per caricare le pagine (Slide 43 Angular).
+3. Pagine (ng generate component pages/editor):
+   - Usa la Grid di Bootstrap (container, row, col) per far sì che la 
+     sidebar degli asset scompaia o si sposti su schermi piccoli (Slide 13 Bootstrap).
+
+FASE 5: L'EDITOR SU CANVAS (TYPESCRIPT AVANZATO)
+--------------------------------------------------------------------------------
+1. Nell'editor.component.html inserisci il tag <canvas #mapCanvas></canvas>.
+2. Nell'editor.component.ts:
+   - Usa @ViewChild per prendere il riferimento al canvas.
+   - Usa le classi TypeScript per gestire gli oggetti (Slide 7-10 TS).
+   - Implementa il Drag & Drop: calcola la posizione del mouse rispetto 
+     al canvas e aggiorna il JSON della mappa.
+3. Salvataggio: Il service invierà il JSON tramite una chiamata POST (Slide 31 HTTP).
+
+FASE 6: TOCCO FINALE PER IL VOTO ALTO (PWA)
+--------------------------------------------------------------------------------
+Anche se non facciamo la versione mobile "nativa", trasformare il sito in PWA 
+soddisfa il requisito "Mobile" dell'esame (Slide 3 PWA).
+1. > cd frontend
+2. > ng add @angular/pwa
+3. Questo permetterà al professore di "installare" il sito sul suo telefono 
+   direttamente dal browser, vedendo l'icona nella home.
+================================================================================
