@@ -23,3 +23,8 @@ A seguito di un'analisi preliminare delle specifiche e degli argomenti trattati 
 
     Persistenza Dati: utilizzo di un database per l'archiviazione di account, mappe (salvate in formato JSON per mantenere la modificabilità dei singoli elementi) e asset grafici 
     (gestiti come file binari).
+
+L'applicazione Web inoltre avrà due pagine, la prima dedicata a log in, galleria community e galleria personale, ed una seconda dedicata all'editor delle mappe.
+Questo progretto segue strettamente l'architettura MEAN (Mongo, Express, Angular, Node.js) e l'architettura "MVC", dove "frontend" è la View, e Monitor e Control sono eseguiti in backend
+
+Inoltre la web application richiede di essere lanciata in locale per testing o tramite web addres localhost::3000

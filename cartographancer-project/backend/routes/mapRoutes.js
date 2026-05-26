@@ -1,11 +1,11 @@
 const express = require('express');
-const cors=express.Router();
+const router = express.Router();
 const Map = require('../models/Map');
+const auth = require('../middleware/auth');
 
-// GET /api/maps - Ottieni tutte le mapppe pubbliche (galleria)
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
     try {
-        const maps = await Map.find({ isPublic: true }).populate('author', 'username');
+        const maps = await Map.find({ isPublic: true }).populate('creator', 'name');
         res.json(maps);
     } catch (err) {
         next(err);
@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET /api/maps/user/:userId - Ottieni tutte le mappe di un utente specifico
-router.get('/user/:userId', async (req, res, next) => {
+router.get('/user/:userId', auth, async (req, res, next) => {
     try {
         const userMaps= await Map.find({ creator: req.params.userId });
         res.json(userMaps);
@@ -22,13 +22,12 @@ router.get('/user/:userId', async (req, res, next) => {
     }
 });
 
-// POST /api/maps - salva una nuova mappa
-router.post('/', async (req, res, next) => {
+router.post('/', auth, async (req, res, next) => {
     try {
         const newMap= new Map({
             title: req.body.title,
             description: req.body.description,
-            creator: req.body.creator,
+            creator: req.user,
             gridSize: req.body.gridSize,
             width: req.body.width,
             height: req.body.height,
@@ -42,11 +41,10 @@ router.post('/', async (req, res, next) => {
     }
 });
 
-//PUT /api/maps/:id - aggiorna una mappa esistente
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', auth, async (req, res, next) => {
     try {
-        const updatedMap = await Map.findByIdAndUpdate(
-            req.params.id,
+        const updatedMap = await Map.findOneAndUpdate(
+            { _id: req.params.id, creator: req.user },
             { placements: req.body.placements, isPublic: req.body.isPublic, title: req.body.title, description: req.body.description },
             { new: true }
         );
@@ -57,8 +55,7 @@ router.put('/:id', async (req, res, next) => {
     }
 });
 
-//POST /api/maps/:id/clone - clona una mappa esistente
-router.post('/:id/clone', async (req, res, next) => {
+router.post('/:id/clone', auth, async (req, res, next) => {
     try {
         const originalMap = await Map.findById(req.params.id);
         if (!originalMap) {
@@ -67,13 +64,13 @@ router.post('/:id/clone', async (req, res, next) => {
         const clonedMap = new Map({
             title: originalMap.title + ' (Clone)',
             description: originalMap.description,
-            creator: req.body.newCreatorId, // utente che esegue il clonaggio
+            creator: req.user,
             gridSize: originalMap.gridSize,
             width: originalMap.width,
             height: originalMap.height,
             placements: originalMap.placements,
-            isPublic: false, // le mappe clonate sono private di default
-            clonedFrom: originalMap._id, // riferimento alla mappa originale
+            isPublic: false,
+            clonedFrom: originalMap._id,
         });
         const savedClonedMap = await clonedMap.save();
         res.status(201).json(savedClonedMap);
@@ -82,10 +79,9 @@ router.post('/:id/clone', async (req, res, next) => {
     }
 });
 
-// DELETE /api/maps/:id - elimina una mappa
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', auth, async (req, res, next) => {
     try {
-        const deletedMap = await Map.findByIdAndDelete(req.params.id);
+        const deletedMap = await Map.findOneAndDelete({ _id: req.params.id, creator: req.user });
         if (!deletedMap) {
             return res.status(404).json({ message: 'Map not found' });
         }
